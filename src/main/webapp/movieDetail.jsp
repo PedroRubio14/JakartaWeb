@@ -16,7 +16,8 @@
 <p>ID: ${movie.id}</p>
 <p>Descripción: ${movie.description}</p>
 
-<form action="movie/delete" method="post">
+<form action="movies" method="POST">
+    <input type="hidden" name="__method" value="DELETE">
     <input type="hidden" name="id" value="${movie.id}">
     <button type="submit">Eliminar</button>
 </form>

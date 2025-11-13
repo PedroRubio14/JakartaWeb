@@ -40,7 +40,7 @@
                     <c:forEach var="movie" items="${movies}">
                         <tr>
                             <td>${movie.id}</td>
-                            <td><a href="${pageContext.request.contextPath}/movie?id=${movie.id}">${movie.name}</a></td>
+                            <td><a href="${pageContext.request.contextPath}/movies?id=${movie.id}">${movie.name}</a></td>
                             <td>${movie.description}</td>
                             <td>${movie.year}</td>
                         </tr>
@@ -63,6 +63,7 @@
         </hgroup>
         <article>
             <form action="movies" method="POST">
+                <input type="hidden" name="__method" value="POST">
                 <label> Movie title
                     <input type="text" name="name">
                 </label>

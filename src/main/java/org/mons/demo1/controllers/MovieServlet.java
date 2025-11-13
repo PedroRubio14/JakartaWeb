@@ -58,22 +58,57 @@ public class MovieServlet extends HttpServlet {
 
     }
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String idParm  = request.getParameter("id");
+        if(idParm == null){
+            try {
+                showAllMovies(request,response);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
 
+        } else {
+            String idParam = request.getParameter("id");
+            int id = parseInt(idParam);
+            Movie movie = service.getById(id);
 
-        try {
-            showAllMovies(request,response);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+            request.setAttribute("movie", movie);
+            request.getRequestDispatcher("/movieDetail.jsp").forward(request, response);
         }
+
     }
 
     protected void  doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        service.addMovie(new Movie(
-                0L,
-                request.getParameter("name"),
-                request.getParameter("description"),
-                parseInt(request.getParameter("year"))
-        ));
+
+        if("POST".equalsIgnoreCase(request.getParameter("__method"))) {
+            service.addMovie(new Movie(
+                    0L,
+                    request.getParameter("name"),
+                    request.getParameter("description"),
+                    parseInt(request.getParameter("year"))
+            ));
+
+            response.sendRedirect(request.getContextPath() + "/movies");
+        }else if ("DELETE".equalsIgnoreCase(request.getParameter("__method"))) {
+            String idParam = request.getParameter("id");
+            if (idParam != null) {
+                int id = parseInt(idParam);
+                service.deleteMovieById(id);
+            }
+            response.sendRedirect(request.getContextPath() + "/movies");
+
+        }
+
+
+    }
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        if("DELETE".equalsIgnoreCase(request.getMethod())) {
+            String idParam = request.getParameter("id");
+            if (idParam != null) {
+                int id = parseInt(idParam);
+                service.deleteMovieById(id);
+            }
+
+        }
     }
 
 
