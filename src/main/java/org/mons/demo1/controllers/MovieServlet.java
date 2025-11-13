@@ -5,9 +5,11 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.mons.demo1.dto.MovieDto;
 import org.mons.demo1.models.Movie;
 import org.mons.demo1.services.MovieService;
-import org.mons.demo1.services.MovieServiceOrmImpl;
+import org.mons.demo1.dao.*;
+import org.mons.demo1.services.MovieServiceImp;
 import org.mons.demo1.util.jdbcConnector;
 
 import java.io.IOException;
@@ -20,11 +22,11 @@ import static java.lang.Integer.parseInt;
 @WebServlet(name="movieServlet",value = "/movies")
 public class MovieServlet extends HttpServlet {
 
-    private MovieService service;
+    private MovieServiceImp service;
 
     @Override
     public void init() throws ServletException {
-        service = new MovieServiceOrmImpl();
+        service = new MovieServiceImp();
 
     }
 
@@ -32,25 +34,7 @@ public class MovieServlet extends HttpServlet {
 
 
     private void showAllMovies(HttpServletRequest req, HttpServletResponse resp) throws SQLException, ServletException, IOException {
-        List<Movie> movies = new ArrayList<>();
-
-        Connection conn = jdbcConnector.getConnection();
-
-        PreparedStatement pst = conn.prepareStatement("SELECT * from movies;");
-        ResultSet result = pst.executeQuery();
-
-        while(result.next()){
-            long movieId = result.getLong("id");
-            String movieTitle = result.getString("title");
-            String movieDesc = result.getString("description");
-            int movieYear= result.getInt("year");
-
-
-            Movie movie = new Movie(movieId,movieTitle,movieDesc,movieYear);
-            movies.add(movie);
-        }
-        conn.close();
-
+        List<MovieDto> movies  =  service.getMovies();
 
         req.setAttribute("movies",movies);
         req.getRequestDispatcher("/movies.jsp").forward(req,resp);
@@ -69,7 +53,7 @@ public class MovieServlet extends HttpServlet {
         } else {
             String idParam = request.getParameter("id");
             int id = parseInt(idParam);
-            Movie movie = service.getById(id);
+            MovieDto movie = service.getById(id);
 
             request.setAttribute("movie", movie);
             request.getRequestDispatcher("/movieDetail.jsp").forward(request, response);
@@ -80,7 +64,7 @@ public class MovieServlet extends HttpServlet {
     protected void  doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         if("POST".equalsIgnoreCase(request.getParameter("__method"))) {
-            service.addMovie(new Movie(
+            service.addMovie(new MovieDto(
                     0L,
                     request.getParameter("name"),
                     request.getParameter("description"),
