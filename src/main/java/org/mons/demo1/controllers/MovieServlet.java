@@ -5,7 +5,9 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.mons.demo1.dto.CommentDto;
 import org.mons.demo1.dto.MovieDto;
+import org.mons.demo1.models.Comment;
 import org.mons.demo1.models.Movie;
 import org.mons.demo1.services.MovieService;
 import org.mons.demo1.dao.*;
@@ -53,9 +55,14 @@ public class MovieServlet extends HttpServlet {
         } else {
             String idParam = request.getParameter("id");
             int id = parseInt(idParam);
+
+            List<CommentDto> comments = service.getComments(id);
             MovieDto movie = service.getById(id);
 
+            System.out.println(comments);
+
             request.setAttribute("movie", movie);
+            request.setAttribute("comments", comments);
             request.getRequestDispatcher("/movieDetail.jsp").forward(request, response);
         }
 
@@ -68,7 +75,9 @@ public class MovieServlet extends HttpServlet {
                     0L,
                     request.getParameter("name"),
                     request.getParameter("description"),
-                    parseInt(request.getParameter("year"))
+                    parseInt(request.getParameter("year")),
+                    new ArrayList<CommentDto>()
+
             ));
 
             response.sendRedirect(request.getContextPath() + "/movies");
@@ -78,6 +87,18 @@ public class MovieServlet extends HttpServlet {
                 int id = parseInt(idParam);
                 service.deleteMovieById(id);
             }
+            response.sendRedirect(request.getContextPath() + "/movies");
+
+        } else if("PUT".equalsIgnoreCase(request.getParameter("__method"))) {
+            long idParam = Long.parseLong(request.getParameter("id"));
+            service.updateMovie(new MovieDto(
+                    idParam,
+                    request.getParameter("name"),
+                    request.getParameter("description"),
+                    parseInt(request.getParameter("year")),
+                    new ArrayList<CommentDto>()
+
+            ));
             response.sendRedirect(request.getContextPath() + "/movies");
 
         }

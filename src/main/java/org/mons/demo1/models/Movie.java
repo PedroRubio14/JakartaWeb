@@ -2,8 +2,12 @@ package org.mons.demo1.models;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
+
+import java.util.List;
 
 @Getter
+@Setter
 @Entity
 @Table(name = "movies")
 public class Movie {
@@ -15,6 +19,8 @@ public class Movie {
     @Column(name = "description")
     private String description;
     private int year;
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL)
+    private List<Comment> comments;
 
 
     public Movie(long id, String name, String description, int year){
