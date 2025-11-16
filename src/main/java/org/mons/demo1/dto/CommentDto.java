@@ -2,11 +2,15 @@ package org.mons.demo1.dto;
 
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import lombok.Getter;
+import lombok.Setter;
 import org.mons.demo1.models.Movie;
 
 import java.sql.Timestamp;
 
 
+@Setter
+@Getter
 public class CommentDto {
     private Long id;
     private Long movie;
@@ -26,37 +30,6 @@ public class CommentDto {
     }
 
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getMovie() {
-        return movie;
-    }
-
-    public void setMovie(Long movie) {
-        this.movie = movie;
-    }
-
-    public String getComment_text() {
-        return comment_text;
-    }
-
-    public void setComment_text(String comment_text) {
-        this.comment_text = comment_text;
-    }
-
-    public Timestamp getCreated_at() {
-        return created_at;
-    }
-
-    public void setCreated_at(Timestamp created_at) {
-        this.created_at = created_at;
-    }
 }
 
 

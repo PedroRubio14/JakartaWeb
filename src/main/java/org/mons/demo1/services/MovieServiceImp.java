@@ -63,10 +63,10 @@ public class MovieServiceImp implements MovieService {
     @Override
     public List<CommentDto> getComments(int movieId) {
         List<Comment> comments = dao.getComments(movieId);
-        System.out.println("DEBUG: Found " + comments.size() + " comments for movie " + movieId);
+        System.out.println("Comments size: " + comments.size() + " MOVIE_ID: " + movieId);
 
         if (comments.isEmpty()) {
-            System.out.println("DEBUG: No comments found in database for movie " + movieId);
+            System.out.println("No comments " + movieId);
             return null;
         }
 
