@@ -19,7 +19,7 @@ public class Movie {
     @Column(name = "description")
     private String description;
     private int year;
-    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL , fetch = FetchType.EAGER)
     private List<Comment> comments;
 
 

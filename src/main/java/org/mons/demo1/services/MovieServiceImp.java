@@ -13,7 +13,7 @@ import java.util.List;
 import static java.lang.Integer.parseInt;
 
 public class MovieServiceImp implements MovieService {
-    private final MovieDao dao = new MovieDaoDBImpl();
+    private final MovieDao dao = new MovieDaoOrmImpl();
 
 
 
