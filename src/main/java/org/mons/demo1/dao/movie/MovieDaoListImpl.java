@@ -1,4 +1,4 @@
-package org.mons.demo1.dao;
+package org.mons.demo1.dao.movie;
 
 import org.mons.demo1.models.Movie;
 

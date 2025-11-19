@@ -6,6 +6,7 @@
     <persistence-unit name="moviesMySQL">
     <class>org.mons.demo1.models.Movie</class>
         <class>org.mons.demo1.models.Comment</class>
+        <class>org.mons.demo1.models.User</class>
 
         <properties>
             <property name="jakarta.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>

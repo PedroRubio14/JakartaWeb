@@ -1,16 +1,18 @@
 package org.mons.demo1.controllers;
 
-import jakarta.servlet.ServletException;
+import jakarta.servlet.*;
+import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.mons.demo1.dto.CommentDto;
 import org.mons.demo1.dto.MovieDto;
 import org.mons.demo1.models.Comment;
 import org.mons.demo1.models.Movie;
 import org.mons.demo1.services.MovieService;
-import org.mons.demo1.dao.*;
+import org.mons.demo1.dao.movie.*;
 import org.mons.demo1.services.MovieServiceImp;
 import org.mons.demo1.util.jdbcConnector;
 
@@ -22,7 +24,8 @@ import java.util.List;
 import static java.lang.Integer.parseInt;
 
 @WebServlet(name="movieServlet",value = "/movies")
-public class MovieServlet extends HttpServlet {
+@WebFilter("/movies")
+public class MovieServlet extends HttpServlet implements Filter {
 
     private MovieServiceImp service;
 
@@ -117,5 +120,17 @@ public class MovieServlet extends HttpServlet {
     }
 
 
+    @Override
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+        HttpServletRequest request = (HttpServletRequest) servletRequest;
+        HttpServletResponse response = (HttpServletResponse) servletResponse;
+
+        HttpSession session = request.getSession(false);
+        if(session == null) {
+            response.sendRedirect("login");
+        } else {
+            filterChain.doFilter(servletRequest, servletResponse);
+        }
+    }
 
 }

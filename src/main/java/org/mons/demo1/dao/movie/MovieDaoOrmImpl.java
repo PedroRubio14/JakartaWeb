@@ -1,7 +1,6 @@
-package org.mons.demo1.dao;
+package org.mons.demo1.dao.movie;
 
 import jakarta.persistence.EntityManager;
-import org.mons.demo1.models.Comment;
 import org.mons.demo1.models.Movie;
 import org.mons.demo1.util.ConnectionManager;
 
@@ -52,16 +51,16 @@ public class MovieDaoOrmImpl implements MovieDao {
         return movie;
     }
 
-    @Override
-    public List<Comment> getComments(int movieId) {
-        try {
-            return em.createQuery(
-                            "SELECT c FROM Comment c WHERE c.movie.id = :movieId ORDER BY c.created_at DESC",
-                            Comment.class)
-                    .setParameter("movieId", movieId)
-                    .getResultList();
-        } catch (Exception e) {
-            return List.of();
-        }
-    }
+//    @Override
+//    public List<Comment> getComments(int movieId) {
+//        try {
+//            return em.createQuery(
+//                            "SELECT c FROM Comment c WHERE c.movie.id = :movieId ORDER BY c.created_at DESC",
+//                            Comment.class)
+//                    .setParameter("movieId", movieId)
+//                    .getResultList();
+//        } catch (Exception e) {
+//            return List.of();
+//        }
+//    }
 }

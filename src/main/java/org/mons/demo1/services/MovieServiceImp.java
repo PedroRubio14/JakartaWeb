@@ -1,13 +1,12 @@
 package org.mons.demo1.services;
 
-import org.mons.demo1.dao.MovieDao;
-import org.mons.demo1.dao.MovieDaoDBImpl;
-import org.mons.demo1.dao.MovieDaoOrmImpl;
+import org.mons.demo1.dao.movie.MovieDao;
+import org.mons.demo1.dao.movie.MovieDaoOrmImpl;
 import org.mons.demo1.dto.CommentDto;
 import org.mons.demo1.dto.MovieDto;
 import org.mons.demo1.models.Comment;
 import org.mons.demo1.models.Movie;
-
+import java.util.Comparator;
 import java.util.List;
 
 import static java.lang.Integer.parseInt;
@@ -62,7 +61,9 @@ public class MovieServiceImp implements MovieService {
 
     @Override
     public List<CommentDto> getComments(int movieId) {
-        List<Comment> comments = dao.getComments(movieId);
+        Movie movie = dao.getById(movieId);
+        List<Comment> comments = movie.getComments()
+                .stream().sorted((Comparator.comparing(Comment::getCreated_at)).reversed()).toList();
         System.out.println("Comments size: " + comments.size() + " MOVIE_ID: " + movieId);
 
         if (comments.isEmpty()) {
@@ -71,7 +72,7 @@ public class MovieServiceImp implements MovieService {
         }
 
 
-        return commentListToDto(dao.getComments(movieId));
+        return commentListToDto(movie.getComments());
     }
 
     private CommentDto commentToDto(Comment comment) {

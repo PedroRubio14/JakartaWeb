@@ -1,6 +1,5 @@
-package org.mons.demo1.dao;
+package org.mons.demo1.dao.movie;
 
-import org.mons.demo1.models.Comment;
 import org.mons.demo1.models.Movie;
 import org.mons.demo1.util.jdbcConnector;
 
@@ -129,36 +128,36 @@ public class MovieDaoDBImpl implements MovieDao {
         }
     }
 
-    @Override
-    public List<Comment> getComments(int movieId) {
-
-        try{
-            Connection connection = jdbcConnector.getConnection();
-            PreparedStatement pst = connection.prepareStatement("SELECT * from comments where movie_id = ?;");
-            pst.setInt(1,movieId);
-            ResultSet result = pst.executeQuery();
-
-            List<Comment> comments = new ArrayList<>();
-            while(result.next()){
-                long id = result.getLong("id");
-                long movie_id = result.getLong("movie_id");
-                String comment_text = result.getString("comment_text");
-                Timestamp created_at = result.getTimestamp("created_at");
-
-                Movie movie = getById((int) movie_id);
-
-
-                Comment comment = new Comment(id, movie,comment_text,created_at);
-                comments.add(comment);
-
-            }
-            connection.close();
-
-            return comments;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
-
-    }
+//    @Override
+//    public List<Comment> getComments(int movieId) {
+//
+//        try{
+//            Connection connection = jdbcConnector.getConnection();
+//            PreparedStatement pst = connection.prepareStatement("SELECT * from comments where movie_id = ?;");
+//            pst.setInt(1,movieId);
+//            ResultSet result = pst.executeQuery();
+//
+//            List<Comment> comments = new ArrayList<>();
+//            while(result.next()){
+//                long id = result.getLong("id");
+//                long movie_id = result.getLong("movie_id");
+//                String comment_text = result.getString("comment_text");
+//                Timestamp created_at = result.getTimestamp("created_at");
+//
+//                Movie movie = getById((int) movie_id);
+//
+//
+//                Comment comment = new Comment(id, movie,comment_text,created_at);
+//                comments.add(comment);
+//
+//            }
+//            connection.close();
+//
+//            return comments;
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+//
+//
+//    }
 }
