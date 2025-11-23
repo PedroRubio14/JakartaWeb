@@ -22,6 +22,7 @@
 <body>
 <main class="container">
     <form action="login" method="POST">
+        <input type="hidden" name="__method" value="POST">
 
         <label for="username">User</label>
         <input type="text" id="username" name="username">

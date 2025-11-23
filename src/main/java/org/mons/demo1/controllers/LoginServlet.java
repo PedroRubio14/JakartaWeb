@@ -13,6 +13,7 @@ import org.mons.demo1.services.UserServiceImp;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 
 @WebServlet(name="loginServlet",value = "/login")
 public class LoginServlet extends HttpServlet {
@@ -20,22 +21,38 @@ public class LoginServlet extends HttpServlet {
     UserServiceImp service = new UserServiceImp();
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        UserDto user = service.getUser(request.getParameter("username"));
 
-        String password = Hashing.sha256()
-                .hashString(request.getParameter("password"), StandardCharsets.UTF_8)
-                .toString();
+        if(Objects.equals(request.getParameter("__method"), "POST")) {
+            UserDto user = service.getUser(request.getParameter("username"));
 
-        if (!service.validateUser(user, password) || user == null) {
-            response.sendRedirect("login.jsp");
+            String password = Hashing.sha256()
+                    .hashString(request.getParameter("password"), StandardCharsets.UTF_8)
+                    .toString();
+
+            if (!service.validateUser(user, password) || user == null) {
+                response.sendRedirect("login.jsp");
 
 
-        } else {
-            request.getSession(true).setAttribute("username", user.getUsername());
-            response.sendRedirect("movies");
+            } else if (service.validateUser(user, password)) {
+                request.getSession(true).setAttribute("username", user.getUsername());
+                response.sendRedirect("movies");
+
+            }
+
+        } else if(Objects.equals(request.getParameter("__method"), "DELETE")) {
+            if(request.getSession(false).getAttribute("username") == null) {
+                response.sendRedirect("login.jsp");
+            } else {
+                request.getSession(false).invalidate();
+                response.sendRedirect("login.jsp");
+
+            }
 
         }
+
     }
+
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.sendRedirect("login.jsp");
 

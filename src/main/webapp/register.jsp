@@ -25,6 +25,7 @@
 
         <label for="username">User</label>
         <input type="text" id="username" name="username">
+        <p>${error}</p>
 
         <label for="passwd">Password</label>
         <input type="password" id="passwd" name="password">

@@ -42,6 +42,11 @@ public class UserServiceImp {
     public UserDto addUser(String username, String firstName, String lastName, String password){
         String hashedPassword = Hashing.sha256().hashString(password, StandardCharsets.UTF_8).toString();
 
+        if(dao.getUser(username) != null){
+            return null;
+
+        }
+
         return new UserDto(dao.addUser(new User(0L,username, firstName, lastName, hashedPassword)));
 
     }

@@ -62,15 +62,12 @@ public class MovieServiceImp implements MovieService {
     @Override
     public List<CommentDto> getComments(int movieId) {
         Movie movie = dao.getById(movieId);
-        List<Comment> comments = movie.getComments()
-                .stream().sorted((Comparator.comparing(Comment::getCreated_at)).reversed()).toList();
-        System.out.println("Comments size: " + comments.size() + " MOVIE_ID: " + movieId);
+        if(movie.getComments() != null){
+            List<Comment> comments = movie.getComments()
+                    .stream().sorted((Comparator.comparing(Comment::getCreated_at)).reversed()).toList();
+            System.out.println("Comments size: " + comments.size() + " MOVIE_ID: " + movieId);
 
-        if (comments.isEmpty()) {
-            System.out.println("No comments " + movieId);
-            return null;
         }
-
 
         return commentListToDto(movie.getComments());
     }

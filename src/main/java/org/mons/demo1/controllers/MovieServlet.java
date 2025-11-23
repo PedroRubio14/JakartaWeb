@@ -14,6 +14,7 @@ import org.mons.demo1.models.Movie;
 import org.mons.demo1.services.MovieService;
 import org.mons.demo1.dao.movie.*;
 import org.mons.demo1.services.MovieServiceImp;
+import org.mons.demo1.services.UserServiceImp;
 import org.mons.demo1.util.jdbcConnector;
 
 import java.io.IOException;
@@ -24,8 +25,7 @@ import java.util.List;
 import static java.lang.Integer.parseInt;
 
 @WebServlet(name="movieServlet",value = "/movies")
-@WebFilter("/movies")
-public class MovieServlet extends HttpServlet implements Filter {
+public class MovieServlet extends HttpServlet  {
 
     private MovieServiceImp service;
 
@@ -40,15 +40,28 @@ public class MovieServlet extends HttpServlet implements Filter {
 
     private void showAllMovies(HttpServletRequest req, HttpServletResponse resp) throws SQLException, ServletException, IOException {
         List<MovieDto> movies  =  service.getMovies();
+        HttpSession session = req.getSession(false);
+        if(session.getAttribute("username") != null) {
+            String usernameParm  = session.getAttribute("username").toString();
+            req.setAttribute("username", usernameParm);
+            req.setAttribute("movies",movies);
+            req.getRequestDispatcher("/movies.jsp").forward(req,resp);
 
-        req.setAttribute("movies",movies);
-        req.getRequestDispatcher("/movies.jsp").forward(req,resp);
+
+        }
+
+
 
 
     }
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String idParm  = request.getParameter("id");
-        if(idParm == null){
+        if(request.getSession(false) == null) {
+            response.sendRedirect("login.jsp");
+
+        }
+        if(idParm == null) {
+
             try {
                 showAllMovies(request,response);
             } catch (SQLException e) {
@@ -63,6 +76,7 @@ public class MovieServlet extends HttpServlet implements Filter {
             MovieDto movie = service.getById(id);
 
             System.out.println(comments);
+
 
             request.setAttribute("movie", movie);
             request.setAttribute("comments", comments);
@@ -103,7 +117,6 @@ public class MovieServlet extends HttpServlet implements Filter {
 
             ));
             response.sendRedirect(request.getContextPath() + "/movies");
-
         }
 
 
@@ -120,17 +133,17 @@ public class MovieServlet extends HttpServlet implements Filter {
     }
 
 
-    @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        HttpServletRequest request = (HttpServletRequest) servletRequest;
-        HttpServletResponse response = (HttpServletResponse) servletResponse;
-
-        HttpSession session = request.getSession(false);
-        if(session == null) {
-            response.sendRedirect("login");
-        } else {
-            filterChain.doFilter(servletRequest, servletResponse);
-        }
-    }
+//    @Override
+//    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+//        HttpServletRequest request = (HttpServletRequest) servletRequest;
+//        HttpServletResponse response = (HttpServletResponse) servletResponse;
+//
+//        HttpSession session = request.getSession(false);
+//        if(session == null) {
+//            response.sendRedirect("login");
+//        } else {
+//            filterChain.doFilter(servletRequest, servletResponse);
+//        }
+//    }
 
 }

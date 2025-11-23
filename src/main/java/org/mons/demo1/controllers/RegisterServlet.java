@@ -28,9 +28,15 @@ public class RegisterServlet extends HttpServlet {
                 request.getParameter("password")
 
         );
-        assert user != null;
-        request.getSession(true).setAttribute("username",user.getUsername());
-        response.sendRedirect("movies");
+        if(user != null){
+            request.getSession(true).setAttribute("username",user.getUsername());
+            response.sendRedirect("movies");
+        } else {
+            String error = "Usuario ya existe, inicie sesion o registre un usuario con otro nombre";
+            request.setAttribute("error",error);
+            request.getRequestDispatcher("register.jsp").forward(request,response);
+        }
+
 
     }
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

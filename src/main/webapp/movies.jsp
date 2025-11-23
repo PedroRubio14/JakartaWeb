@@ -21,7 +21,17 @@
     </style>
 </head>
 <body>
+
 <main class="container">
+    <section>
+        <article>
+            <h3>${username}</h3>
+            <form action="login" method="POST">
+                <input type="hidden" name="__method" value="DELETE">
+                <button type="submit">CERRAR SESION</button>
+            </form>
+        </article>
+    </section>
     <section>
         <hgroup>
             <h2>Movies</h2>
@@ -82,6 +92,8 @@
             </form>
         </article>
     </section>
+
+
 </main>
 <footer class="container">
     <small>Pedro Rubio Rigo</small>
